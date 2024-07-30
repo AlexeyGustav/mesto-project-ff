@@ -1,3 +1,4 @@
+// Version 1
 // const templateCard = document.getElementById("card-template").content;
 // const containerCards = document.querySelector(".places__list");
 
@@ -34,18 +35,16 @@
 
 // init();
 
-
+// Version 2
 const templateCard = document.getElementById("card-template").content;
-const containerCards = document.querySelector(".places__list");
+const placesList = document.querySelector(".places__list");
 
 
-function init(dataCard, delCard) {
+function initCard(dataCard, delCard) {
   // Темплейт карточки
-  const cloneCard = templateCard.cloneNode(true);
-  let cardImage = cloneCard.querySelector(".card__image");
-
-  // карточка которую мы будем удалять (не шаблон)
-  let placesItem = cloneCard.querySelector(".places__item");
+  const placesItem = templateCard.querySelector(".places__item");
+  const cloneCard = placesItem.cloneNode(true);
+  const cardImage = cloneCard.querySelector(".card__image");
 
   // наполнение карточки данными
   cardImage.src = dataCard.link;
@@ -55,24 +54,24 @@ function init(dataCard, delCard) {
   // удаление карточки
   const delBtn = cloneCard.querySelector(".card__delete-button");
   delBtn.addEventListener("click", () => {
-    delCard(placesItem);
+    delCard(cloneCard);
   });
 
   return cloneCard;
 
 };
 
-// @todo: Вывести карточки на страницу
+// Вывод карточек на страницу
 
 function initCards() {
   for (let index = 0; index < initialCards.length; index++) {
-    containerCards.append(init(initialCards[index], delFunction));
+    placesList.append(initCard(initialCards[index], delFunction));
   }
 }
 initCards();
 
 
-// @todo: Функция удаления карточки
+// Функция удаления карточки
 
 function delFunction(elem) {
   elem.remove();
