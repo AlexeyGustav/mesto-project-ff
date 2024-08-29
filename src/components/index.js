@@ -35,20 +35,6 @@
 
 // init();
 
-// Version 2
-const templateCard = document.getElementById("card-template").content;
-const placesList = document.querySelector(".places__list");
-
-
-
-// Вывод карточек на страницу
-
-function initCards() {
-  for (let index = 0; index < initialCards.length; index++) {
-    placesList.append(initCard(initialCards[index], delFunction));
-  }
-}
-initCards();
 
 
 
