@@ -1,7 +1,4 @@
-import { initialCards } from "./cards.js";
-import like from "./index.js";
-
-import { openModalImage } from "./modal.js";
+import { openPopup } from "./modal.js";
 
 // Функция создания карточки
 export function initCard(dataCard, delCard, addLike, openPopup) {
@@ -50,7 +47,7 @@ export function addLike(elem) {
 
 // Функция попапа с картинкой
 export function poupupImg(e) { 
-  document.querySelector(".popup_type_image").style.display = "flex";
+  openPopup(document.querySelector(".popup_type_image"));
   const imageModal = document.querySelector(".popup__image");
   
   imageModal.src = e.src;

@@ -1,7 +1,7 @@
 import './styles/index.css';
 import { initialCards } from "./components/cards.js";
 import {initCard, delFunction, addLike, poupupImg} from "./components/card.js";
-import { openModal, closeModal, openModalNewMesto, handleFormSubmit  } from "./components/modal.js";
+import { openModal, closeModal, openModalNewMesto, handleFormSubmit } from "./components/modal.js";
 
 export const placesList = document.querySelector(".places__list");
 const edit = document.querySelector(".profile__edit-button");
@@ -12,7 +12,6 @@ export const formEditProffesion = formEdit.elements.description;
 export const personaName = document.querySelector(".profile__title");
 export const personaDescription = document.querySelector(".profile__description");
 const buttonNewMesto = document.querySelector(".profile__add-button");
-
 
 // добавление карточки
 const formMesto = document.forms["new-place"];
@@ -38,7 +37,6 @@ buttonNewMesto.addEventListener("click", openModalNewMesto);
 closeEdit.forEach(item => {
   item.addEventListener("click", closeModal);
 });
-
 
 overlay.forEach(item => {
   item.addEventListener("click", function(e) {
@@ -71,5 +69,4 @@ formMesto.addEventListener('submit', function(evt) {
   closeModal();
   placesList.prepend(initCard(arrCards, delFunction, addLike, poupupImg));
 }); 
-
 

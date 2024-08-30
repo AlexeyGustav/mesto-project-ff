@@ -1,4 +1,3 @@
-// import { formMesto, formMestoName, formMestoLink } from "../index.js"
 export { initialCards }
 
 const initialCards = [
