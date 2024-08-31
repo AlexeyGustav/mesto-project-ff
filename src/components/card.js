@@ -1,5 +1,3 @@
-import { openPopup } from "./modal.js";
-
 // Функция создания карточки
 export function initCard(dataCard, delCard, addLike, openImg) {
   // Темплейт карточки
@@ -45,12 +43,4 @@ export function addLike(elem) {
   elem.classList.toggle("card__like-button_is-active");
 }
 
-// Функция попапа с картинкой
-export function poupupImg(e) { 
-  openPopup(document.querySelector(".popup_type_image"));
-  const imageModal = document.querySelector(".popup__image");
-  
-  imageModal.src = e.src;
-  imageModal.alt = e.alt;
-  document.querySelector(".popup__caption").textContent = imageModal.alt
-}
+

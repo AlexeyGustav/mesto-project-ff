@@ -1,59 +1,77 @@
 import './styles/index.css';
 import { initialCards } from "./components/cards.js";
-import {initCard, delFunction, addLike, poupupImg} from "./components/card.js";
-import { openModal, closeModal, openModalNewMesto, handleFormSubmit } from "./components/modal.js";
+import {initCard, delFunction, addLike} from "./components/card.js";
+import { openPopup, closeModal } from "./components/modal.js";
 
 export const placesList = document.querySelector(".places__list");
 const edit = document.querySelector(".profile__edit-button");
-const closeEdit = document.querySelectorAll(".popup__close");
 const formEdit =  document.forms["edit-profile"];
-export const formEditName = formEdit.elements.name;
-export const formEditProffesion = formEdit.elements.description;
-export const personaName = document.querySelector(".profile__title");
-export const personaDescription = document.querySelector(".profile__description");
+const formEditName = formEdit.elements.name;
+const formEditProffesion = formEdit.elements.description;
+const personaName = document.querySelector(".profile__title");
+const personaDescription = document.querySelector(".profile__description");
 const buttonNewMesto = document.querySelector(".profile__add-button");
+
 
 // добавление карточки
 const formMesto = document.forms["new-place"];
 const formMestoName = formMesto.elements["place-name"];
 const formMestoLink = formMesto.elements.link;
 
-export const overlay = document.querySelectorAll(".popup");
-
+const popups = document.querySelectorAll('.popup');
 
 // Вывод карточек на страницу
 
 export function initCards() {
   for (let index = 0; index < initialCards.length; index++) {
-    placesList.append(initCard(initialCards[index], delFunction, addLike, poupupImg));
+    placesList.append(initCard(initialCards[index], delFunction, addLike, popupImg));
   }
 }
 initCards();
 
 // открыть, закрыть модальные окна
+function openProfileModal() {
+  openPopup(document.querySelector(".popup_type_edit"))
+  formEditName.value = personaName.textContent;
+  formEditProffesion.value = personaDescription.textContent;
+}
 
-edit.addEventListener("click", openModal);
-buttonNewMesto.addEventListener("click", openModalNewMesto);
-closeEdit.forEach(item => {
-  item.addEventListener("click", closeModal);
+edit.addEventListener("click", openProfileModal);
+buttonNewMesto.addEventListener("click", function() {
+  openPopup(document.querySelector(".popup_type_new-card"))
 });
 
-overlay.forEach(item => {
-  item.addEventListener("click", function(e) {
-    if(e.target.classList.contains("popup")) {
-      closeModal(item)
-    }
+popups.forEach((popup) => {
+  const closeButton = popup.querySelector(".popup__close")
+  closeButton.addEventListener("click", () => {
+    closeModal(popup);
   });
-});
+})
 
-document.addEventListener("keydown", function(e) {
-  if(e.key === "Escape") {
-    closeModal()
-  };
-});
+popups.forEach((popup) => {
+  popup.addEventListener("mousedown", (evt) => {
+      if (evt.target.classList.contains("popup")) {
+        closeModal(popup);
+      }
+  });
+}); 
 
 // добавление данных в формы
-formEdit.addEventListener('submit', handleFormSubmit); 
+function addTextinForm(editNameValue, editProffesionValue) {
+  personaName.textContent = editNameValue;
+  personaDescription.textContent = editProffesionValue;
+}
+
+function handleProfileFormSubmit(evt) {
+  evt.preventDefault();
+  addTextinForm(formEditName.value, formEditProffesion.value);
+  closeModal(document.querySelector(".popup_type_edit"));
+}
+
+// форма редактирования профиля
+formEdit.addEventListener('submit', handleProfileFormSubmit); 
+
+// форма добавления карточки
 formMesto.addEventListener('submit', function(evt) {
   evt.preventDefault();
 
@@ -66,7 +84,17 @@ formMesto.addEventListener('submit', function(evt) {
 
   formMestoName.value = "";
   formMestoLink.value = "";
-  closeModal();
-  placesList.prepend(initCard(arrCards, delFunction, addLike, poupupImg));
+  closeModal(document.querySelector(".popup_type_new-card"));
+  placesList.prepend(initCard(arrCards, delFunction, addLike, popupImg));
 }); 
+
+// Функция попапа с картинкой
+export function popupImg(e) { 
+  openPopup(document.querySelector(".popup_type_image"));
+  const imageModal = document.querySelector(".popup__image");
+  
+  imageModal.src = e.src;
+  imageModal.alt = e.alt;
+  document.querySelector(".popup__caption").textContent = imageModal.alt
+}
 
