@@ -1,7 +1,7 @@
 import { openPopup } from "./modal.js";
 
 // Функция создания карточки
-export function initCard(dataCard, delCard, addLike, openPopup) {
+export function initCard(dataCard, delCard, addLike, openImg) {
   // Темплейт карточки
   const templateCard = document.getElementById("card-template").content;
   const placesItem = templateCard.querySelector(".places__item");
@@ -29,7 +29,7 @@ export function initCard(dataCard, delCard, addLike, openPopup) {
   const imageCard = cloneCard.querySelector(".card__image");
 
   imageCard.addEventListener("click", function(e) {
-    openPopup(e.target);
+    openImg(e.target);
   });
   return cloneCard;
 
