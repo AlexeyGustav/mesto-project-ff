@@ -11,7 +11,7 @@ const formEditProffesion = formEdit.elements.description;
 const personaName = document.querySelector(".profile__title");
 const personaDescription = document.querySelector(".profile__description");
 const buttonNewMesto = document.querySelector(".profile__add-button");
-
+const popupTypeEdit = document.querySelector(".popup_type_edit");
 
 // добавление карточки
 const formMesto = document.forms["new-place"];
@@ -22,7 +22,7 @@ const popups = document.querySelectorAll('.popup');
 
 // Вывод карточек на страницу
 
-export function initCards() {
+function initCards() {
   for (let index = 0; index < initialCards.length; index++) {
     placesList.append(initCard(initialCards[index], delFunction, addLike, popupImg));
   }
@@ -31,7 +31,7 @@ initCards();
 
 // открыть, закрыть модальные окна
 function openProfileModal() {
-  openPopup(document.querySelector(".popup_type_edit"))
+  openPopup(popupTypeEdit);
   formEditName.value = personaName.textContent;
   formEditProffesion.value = personaDescription.textContent;
 }
@@ -65,7 +65,7 @@ function addTextinForm(editNameValue, editProffesionValue) {
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   addTextinForm(formEditName.value, formEditProffesion.value);
-  closeModal(document.querySelector(".popup_type_edit"));
+  closeModal(popupTypeEdit);
 }
 
 // форма редактирования профиля
