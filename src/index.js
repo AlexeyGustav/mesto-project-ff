@@ -37,21 +37,22 @@ function initCards() {
 }
 initCards();
 
-enableValidation({
-  formElement: ".popup__form",
-  inputElement: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible"
-});
+// enableValidation({
+//   formElement: ".popup__form",
+//   inputElement: ".popup__input",
+//   buttonElement: ".popup__button",
+//   popupButtonDisabled: "popup__button_disabled",
+//   inputErrorClass: "popup__input_error",
+//   errorClass: "popup__input-error_active"
+// });
+
+enableValidation();
 
 // открыть, закрыть модальные окна
 function openProfileModal() {
   openPopup(popupTypeEdit);
   formEditName.value = personaName.textContent;
   formEditProffesion.value = personaDescription.textContent;
-  
 };
 
 edit.addEventListener("click", function() {

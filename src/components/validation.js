@@ -1,8 +1,18 @@
 export { showInputError, hideInputError, isVaild, hasInvalidInput, toggleButtonState, setEventListeners, enableValidation, clearValidation }
 
+const config = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  buttonElement: ".popup__button",
+  popupButtonDisabled: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible"
+}
+
+
 const showInputError = (formElement, inputElement, errorMessage) => {
-  // Находим элемент ошибки внутри самой функции
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  // Находим элемент ошибки внутри самой формы
 
   inputElement.classList.add("popup__input_error");
   errorElement.classList.add("popup__input-error_active");
@@ -14,7 +24,7 @@ const hideInputError = (formElement, inputElement) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
 
   inputElement.classList.remove("popup__input_error");
-  errorElement.classList.remove('popup__input-error_active');
+  errorElement.classList.remove("popup__input-error_active");
   errorElement.textContent = "";
 }
 
@@ -62,7 +72,7 @@ const toggleButtonState = (inputList, buttonElement) => {
 
 const setEventListeners = (formElement) => {
   const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-  const buttonElement = formElement.querySelector('.popup__button');
+  const buttonElement = formElement.querySelector(".popup__button");
   
   // Вызовем toggleButtonState, чтобы не ждать ввода данных в поля
   toggleButtonState(inputList, buttonElement);
@@ -81,19 +91,21 @@ const enableValidation = () => {
   // сделаем из них массив методом Array.from
   const formList = Array.from(document.querySelectorAll("form"));
 
+
   // Переберём полученную коллекцию
   formList.forEach((formElement) => {
     // Для каждой формы вызовем функцию setEventListeners,
     // передав ей элемент формы
     setEventListeners(formElement);
   });
+
 };
 
 // отчистка полей формы от ошибок
 function clearValidation(errorSpan, errorInput) {
   errorSpan.forEach(item => {
     item.textContent = "";
-    item.classList.remove('popup__input-error_active');
+    item.classList.remove("popup__input-error_active");
   })
   errorInput.forEach(item => {
     item.classList.remove("popup__input_error");
