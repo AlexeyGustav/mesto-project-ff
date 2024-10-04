@@ -1,19 +1,10 @@
-export { showInputError, hideInputError, isVaild, hasInvalidInput, toggleButtonState, setEventListeners, enableValidation, clearValidation }
-
-const config = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  buttonElement: ".popup__button",
-  popupButtonDisabled: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible"
-}
-
+export { enableValidation, clearEdit, clearAddMesto };
+import { formMestoName, formMestoLink, formEditName, formEditProffesion } from "../index.js";
 
 const showInputError = (formElement, inputElement, errorMessage) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   // Находим элемент ошибки внутри самой формы
-
+  
   inputElement.classList.add("popup__input_error");
   errorElement.classList.add("popup__input-error_active");
   errorElement.textContent = errorMessage;
@@ -91,7 +82,6 @@ const enableValidation = () => {
   // сделаем из них массив методом Array.from
   const formList = Array.from(document.querySelectorAll("form"));
 
-
   // Переберём полученную коллекцию
   formList.forEach((formElement) => {
     // Для каждой формы вызовем функцию setEventListeners,
@@ -101,13 +91,16 @@ const enableValidation = () => {
 
 };
 
-// отчистка полей формы от ошибок
-function clearValidation(errorSpan, errorInput) {
-  errorSpan.forEach(item => {
-    item.textContent = "";
-    item.classList.remove("popup__input-error_active");
-  })
-  errorInput.forEach(item => {
-    item.classList.remove("popup__input_error");
-  })
+// фунции отчиски полей форм
+function clearEdit(form) {
+  hideInputError(form, formEditName);
+  hideInputError(form, formEditProffesion);
+  enableValidation();
+};
+
+function clearAddMesto(form) {
+  form.reset();
+  hideInputError(form, formMestoName);
+  hideInputError(form, formMestoLink);
+  enableValidation();
 };
