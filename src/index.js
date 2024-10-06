@@ -1,6 +1,6 @@
 import './styles/index.css';
 import { initialCards } from "./components/cards.js";
-import {initCard, delFunction, addLike} from "./components/card.js";
+import {initCard, delFunction, addLike, createDeleteButton} from "./components/card.js";
 import { enableValidation, clearEdit, clearAddMesto } from "./components/validation.js";
 import { openPopup, closeModal } from "./components/modal.js";
 
@@ -13,7 +13,6 @@ const personaName = document.querySelector(".profile__title");
 const personaDescription = document.querySelector(".profile__description");
 const buttonNewMesto = document.querySelector(".profile__add-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
-
 
 // добавление карточки
 const formMesto = document.forms["new-place"];
@@ -51,7 +50,6 @@ function openProfileModal() {
 
 edit.addEventListener("click", function() {
   openProfileModal();
-  // clearEdit(errorSpanProfileModal, inputElement);
   clearEdit(formEdit);
 });
 
@@ -93,17 +91,20 @@ formEdit.addEventListener('submit', handleProfileFormSubmit);
 // форма добавления карточки
 formMesto.addEventListener('submit', function(evt) {
   evt.preventDefault();
-
+  
   const mestoName = formMestoName.value;
   const mestoLink = formMestoLink.value;
   const arrCards = {
     name: mestoName,
     link: mestoLink,
   };
+  
   formMestoName.value = "";
   formMestoLink.value = "";
+  
   closeModal(document.querySelector(".popup_type_new-card"));
-  placesList.prepend(initCard(arrCards, delFunction, addLike, popupImg));
+  placesList.prepend(initCard(arrCards, addLike, popupImg));
+  placesList.firstElementChild.prepend(createDeleteButton("card__delete-button"));
 }); 
 
 // Функция попапа с картинкой
