@@ -1,12 +1,14 @@
 export { initCard, createDeleteButton, delFunction, addLike }
+import { userMe, cardsFromServer } from "./api.js";
 
 // Функция создания карточки
-function initCard(dataCard, delCard, addLike, openImg) {
+function initCard(dataCard, addLike, openImg, delCard) {
   // Темплейт карточки
   const templateCard = document.getElementById("card-template").content;
   const placesItem = templateCard.querySelector(".places__item");
   const cloneCard = placesItem.cloneNode(true);
   const cardImage = cloneCard.querySelector(".card__image");
+
 
   // Наполнение карточки данными
   cardImage.src = dataCard.link;
