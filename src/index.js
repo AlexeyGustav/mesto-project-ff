@@ -25,8 +25,8 @@ const popups = document.querySelectorAll('.popup');
 
 // загрузка контента на страницу
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM готов!')
   userMe().then((data) => {
+    console.log('DOM готов!', data._id)
     personaName.innerHTML = data.name;
     personaDescription.innerHTML = data.about;
     avatar.style.backgroundImage = data.avatar;
@@ -38,12 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const promises = [userMe, cardsFromServer];
   Promise.all(promises)
     .then((results) => {
-      console.log("results", results);
-
       // Вывод карточек на страницу
       cardsFromServer().then((cards) => {
         for (let index = 0; index < cards.length; index++) {
-          placesList.append(initCard(cards[index], addLike, popupImg));
+          placesList.append(initCard(cards[index], addLike, popupImg, delFunction));
         };
       })
         .catch((err) => {
@@ -142,15 +140,15 @@ formEdit.addEventListener('submit', handleProfileFormSubmit);
 
 // форма добавления новой карточки
 
-formMesto.addEventListener('submit', function(evt) {
+formMesto.addEventListener('submit', function (evt) {
   evt.preventDefault();
-  
+
   loadNewCard().then((response) => response.json())
-  .then((card) => 
-    placesList.prepend(initCard(card, addLike, popupImg))
-  );
- 
-  placesList.firstElementChild.prepend(createDeleteButton("card__delete-button"));
+  .then((card) =>
+    placesList.prepend(initCard(card, addLike, popupImg)),
+  )
+
+  // placesList.firstElementChild.prepend(createDeleteButton("card__delete-button"))
 
   closeModal(document.querySelector(".popup_type_new-card"));
 }); 
@@ -165,14 +163,5 @@ export function popupImg(e) {
   document.querySelector(".popup__caption").textContent = imageModal.alt
 }
 
-
-
-// Информация о карточках
-// cardsFromServer().then((data) => {
-//   console.log(data);
-// })
-// .catch((err) => {
-//   console.log('Ошибка. Запрос не выполнен');
-// }); 
 
 

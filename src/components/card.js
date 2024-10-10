@@ -1,4 +1,4 @@
-export { initCard, createDeleteButton, delFunction, addLike }
+export { initCard, createDeleteButton, addLike, delFunction }
 import { userMe, cardsFromServer } from "./api.js";
 
 // Функция создания карточки
@@ -16,10 +16,10 @@ function initCard(dataCard, addLike, openImg, delCard) {
   cloneCard.querySelector(".card__title").textContent = dataCard.name;
 
   // Удаление карточки
-  // const delBtn = cloneCard.querySelector(".card__delete-button");
-  // delBtn.addEventListener("click", () => {
-  //   delCard(cloneCard);
-  // });
+  const delBtn = cloneCard.querySelector(".card__delete-button");
+  delBtn.addEventListener("click", () => {
+    delCard(cloneCard);
+  });
 
   // Лайк
   const like = cloneCard.querySelector(".card__like-button");
@@ -50,8 +50,8 @@ function addLike(elem) {
 
 
 // Функция создания кнопки удаления карточки
-function createDeleteButton(elem) {
+function createDeleteButton(className) {
   let button = document.createElement("button");
-  button.className = elem;
+  button.className = className;
   return button;
 }
