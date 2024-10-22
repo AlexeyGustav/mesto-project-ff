@@ -1,0 +1,16 @@
+.popup_type_delete {
+  margin: auto;
+}
+
+.popup__content_height {
+  min-height: max-content;
+}
+
+.popup__ok {
+  width: 100%;
+  height: 50px;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid transparent;
+}
+

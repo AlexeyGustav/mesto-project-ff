@@ -11,6 +11,26 @@
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
+  position: relative;
+  z-index: 10;
+}
+
+.profile__image::before {
+  content: url("../../../images/correct-image.svg");
+  background-color: #000;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: opacity .4s ease-in-out;
+}
+
+.profile__image:hover::before {
+  opacity: .5;
 }
 
 @media screen and (max-width: 740px) {

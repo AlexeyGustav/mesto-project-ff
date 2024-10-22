@@ -1,13 +1,13 @@
 import './styles/index.css';
 import { initialCards } from "./components/cards.js";
-import {initCard, delFunction, addLike, createDeleteButton, cloneCard, cardImage } from "./components/card.js";
+import { initCard, delFunction, createDeleteButton, cloneCard, cardImage, colorBtnLike, checkLikeBtn, setDeleteBtn } from "./components/card.js";
 import { enableValidation, clearEdit, clearAddMesto } from "./components/validation.js";
 import { openPopup, closeModal } from "./components/modal.js";
-import { userMe, cardsFromServer, loadNewCard } from "./components/api.js";
+import { getInfoOnMe, cardsFromServer, loadNewCard, deleteCard, updateYourProfile, addLikeFromServer, deleteLikeFromServer } from "./components/api.js";
 
 export const placesList = document.querySelector(".places__list");
 const edit = document.querySelector(".profile__edit-button");
-const formEdit =  document.forms["edit-profile"];
+const formEdit = document.forms["edit-profile"];
 export const formEditName = formEdit.elements.name;
 export const formEditProffesion = formEdit.elements.description;
 const personaName = document.querySelector(".profile__title");
@@ -22,39 +22,84 @@ export const formMestoName = formMesto.elements["place-name"];
 export const formMestoLink = formMesto.elements.link;
 
 const popups = document.querySelectorAll('.popup');
+let yourId = "";
 
-// загрузка контента на страницу
-document.addEventListener('DOMContentLoaded', function () {
-  userMe().then((data) => {
-    console.log('DOM готов!', data._id)
-    personaName.innerHTML = data.name;
-    personaDescription.innerHTML = data.about;
-    avatar.style.backgroundImage = data.avatar;
+
+
+// загрузка контента от сервера на страницу
+const promises = [getInfoOnMe(), cardsFromServer()];
+Promise.all(promises)
+  .then(([getUserData, allCards]) => {
+    console.log('getUserData: ', getUserData, allCards);
+
+
+
+    // Информация о профиле
+    yourId = getUserData._id;
+    renderInfoOnMe(getUserData);
+
+    // Вывод карточек на страницу
+    renderCards(allCards, yourId);
+
   })
   .catch((err) => {
-    console.log(err);
+    console.log('Ошибка. Promise.all не загрузился', err);
   });
 
-  const promises = [userMe, cardsFromServer];
-  Promise.all(promises)
-    .then((results) => {
-      // Вывод карточек на страницу
-      cardsFromServer().then((cards) => {
-        for (let index = 0; index < cards.length; index++) {
-          placesList.append(initCard(cards[index], addLike, popupImg, delFunction));
+
+function renderCards(arrayCards, myIdFromServer) {
+
+  for (let index = 0; index < arrayCards.length; index++) {
+    placesList.append(
+      initCard(
+        arrayCards[index], deleteCard, popupImg, myIdFromServer, arrayCards[index].owner._id, initLikefromCard,
+
+
+        // function(colorBtnLike) {
+        //   const arrayLikes = arrayCards[index].likes;
+        //   arrayLikes.forEach(index => {
+        //     if (index._id == myIdFromServer) {
+        //       colorBtnLike.classList.add("card__like-button_is-active");
+        //     }
+        //   })
+        // }
+        
+      )
+    );
+  };
+}
+
+// функция создания лайка
+const initLikefromCard = (buttonLike, textNumlike, dataCard) => {
+    checkLikeBtn(buttonLike)
+    if (buttonLike.classList.contains("card__like-button_is-active")) {
+      addLikeFromServer(dataCard._id)
+      .then((data) => {
+        console.log('data: ', "true", data);
+        console.log('dataCard: ', data.likes.length);
+        textNumlike.textContent = data.likes.length;
+      })
+      .catch(err => {
+        console.log(`Лайк не добавлен ${err}`);
+      })
+    } else {
+      deleteLikeFromServer(dataCard._id)
+      .then((data) => {
+        console.log('data: ', "false", data);
+        console.log('dataCard: ', data.likes.length);
+        textNumlike.textContent = data.likes.length;
+        if(data.likes.length === 0) {
+          textNumlike.textContent = null
         };
       })
-        .catch((err) => {
-          console.log('Ошибка. ( Загрузка карточек ). Запрос не выполнен');
-        });
-    })
-    .catch((err) => {
-      console.log('Ошибка. Promise.all не загрузился');
-    }); 
-
-})
+      .catch(err => {
+        console.log(`Лайк не удалился ${err}`);
+      })
+    }
+}
 
 
+// Валидация
 enableValidation({
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -72,26 +117,24 @@ enableValidation({
 function openProfileModal() {
   openPopup(popupTypeEdit);
 
-  userMe().then((data) => {
+  getInfoOnMe().then((data) => {
     console.log(data);
     formEditName.value = data.name;
     formEditProffesion.value = data.about;
   })
-  .catch((err) => {
-    console.log("Ошибка. Запрос не выполнен");
-  }); 
+    .catch((err) => {
+      console.log("Ошибка. Запрос не выполнен", err);
+    });
 
-  // formEditName.value = personaName.textContent;
-  // formEditProffesion.value = personaDescription.textContent;
 };
 
 // модальное окно (Новое место)
-edit.addEventListener("click", function() {
+edit.addEventListener("click", function () {
   openProfileModal();
   clearEdit(formEdit);
 });
 
-buttonNewMesto.addEventListener("click", function() {
+buttonNewMesto.addEventListener("click", function () {
   openPopup(document.querySelector(".popup_type_new-card"));
   clearAddMesto(formMesto);
 });
@@ -105,11 +148,11 @@ popups.forEach((popup) => {
 
 popups.forEach((popup) => {
   popup.addEventListener("mousedown", (evt) => {
-      if (evt.target.classList.contains("popup")) {
-        closeModal(popup);
-      }
+    if (evt.target.classList.contains("popup")) {
+      closeModal(popup);
+    }
   });
-}); 
+});
 
 // добавление данных в форму (редактирование профиля)
 function addTextinForm(editNameValue, editProffesionValue) {
@@ -120,44 +163,51 @@ function addTextinForm(editNameValue, editProffesionValue) {
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
-  fetch("https://mesto.nomoreparties.co/v1/wff-cohort-24/users/me", {
-    method: "PATCH",
-    headers: {
-      authorization: "8921ad05-b64f-4b7a-874c-7de7db1761f7",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: formEditName.value,
-      about: formEditProffesion.value
-    })
-  }); 
+  const dataProfile = {
+    name: formEditName.value,
+    about: formEditProffesion.value
+  };
+
+  updateYourProfile(dataProfile);
 
   addTextinForm(formEditName.value, formEditProffesion.value);
   closeModal(popupTypeEdit);
 }
 
-formEdit.addEventListener('submit', handleProfileFormSubmit); 
+formEdit.addEventListener('submit', handleProfileFormSubmit);
+
+function renderInfoOnMe(obj) {
+  personaName.textContent = obj.name;
+  personaDescription.textContent = obj.about;
+  avatar.style.backgroundImage = obj.avatar;
+}
+
+
 
 // форма добавления новой карточки
-
 formMesto.addEventListener('submit', function (evt) {
   evt.preventDefault();
 
-  loadNewCard().then((response) => response.json())
-  .then((card) =>
-    placesList.prepend(initCard(card, addLike, popupImg)),
-  )
+  const newCardData = {
+    name: formMestoName.value,
+    link: formMestoLink.value,
+  }
 
-  // placesList.firstElementChild.prepend(createDeleteButton("card__delete-button"))
-
+  loadNewCard(newCardData).then((response) => response.json())
+    .then((card) =>
+      placesList.prepend(
+        initCard(
+          card, deleteCard, popupImg, yourId, card.owner._id, initLikefromCard,
+        )),
+    )
   closeModal(document.querySelector(".popup_type_new-card"));
-}); 
+});
 
 // Функция попапа с картинкой
-export function popupImg(e) { 
+export function popupImg(e) {
   openPopup(document.querySelector(".popup_type_image"));
   const imageModal = document.querySelector(".popup__image");
-  
+
   imageModal.src = e.src;
   imageModal.alt = e.alt;
   document.querySelector(".popup__caption").textContent = imageModal.alt
