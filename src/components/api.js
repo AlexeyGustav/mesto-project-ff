@@ -1,5 +1,3 @@
-import { formMestoName, formMestoLink, newCardData, idCardForDelete } from "../index.js"
-
 const config = {
   baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-24",
   headers: {
@@ -100,4 +98,18 @@ export const deleteLikeFromServer = (cardId) => {
     }
     return Promise.reject(`Карточки не загрузились: ${res.status}`);
   });
+}
+
+export const updatingUserAvatar = (avatar) => {
+  try {
+    const response = fetch(`${config.baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: config.headers,
+      body: JSON.stringify(avatar)
+    })
+
+    return response
+  } catch (error) {
+    console.log(error);
+  }
 }

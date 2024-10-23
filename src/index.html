@@ -77,6 +77,18 @@
     </div>
   </div>
 
+  <div class="popup popup_type_new-avatar popup_is-animated">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="new-avatar" novalidate>
+        <input id="input-avatar-url" type="url" name="formAvatar" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку"  >
+        <span class="input-avatar-url-error profile-modal"></span>
+        <button type="submit" class="button popup__button" disabled>Сохранить</button>
+      </form>
+    </div>
+  </div>
+
 </div>
 
 <template id="card-template">

@@ -1,9 +1,8 @@
 import './styles/index.css';
-import { initialCards } from "./components/cards.js";
-import { initCard, delFunction, createDeleteButton, cloneCard, cardImage, colorBtnLike, checkLikeBtn, setDeleteBtn } from "./components/card.js";
-import { enableValidation, clearEdit, clearAddMesto } from "./components/validation.js";
+import { initCard, checkLikeBtn } from "./components/card.js";
+import { enableValidation, clearEdit, clearAddMesto, clearAvatar } from "./components/validation.js";
 import { openPopup, closeModal } from "./components/modal.js";
-import { getInfoOnMe, cardsFromServer, loadNewCard, deleteCard, updateYourProfile, addLikeFromServer, deleteLikeFromServer } from "./components/api.js";
+import { getInfoOnMe, cardsFromServer, loadNewCard, deleteCard, updateYourProfile, addLikeFromServer, deleteLikeFromServer, updatingUserAvatar } from "./components/api.js";
 
 export const placesList = document.querySelector(".places__list");
 const edit = document.querySelector(".profile__edit-button");
@@ -15,28 +14,31 @@ const personaDescription = document.querySelector(".profile__description");
 const buttonNewMesto = document.querySelector(".profile__add-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
 const avatar = document.querySelector(".profile__image");
+const submitButton = document.querySelector(".popup__button");
+
 
 // добавление карточки
 const formMesto = document.forms["new-place"];
 export const formMestoName = formMesto.elements["place-name"];
 export const formMestoLink = formMesto.elements.link;
 
+// Добавление аватара
+const formAvatar = document.forms["new-avatar"];
+export const formAvatarName = formAvatar.elements.formAvatar;
+
 const popups = document.querySelectorAll('.popup');
 let yourId = "";
-
 
 
 // загрузка контента от сервера на страницу
 const promises = [getInfoOnMe(), cardsFromServer()];
 Promise.all(promises)
   .then(([getUserData, allCards]) => {
-    console.log('getUserData: ', getUserData, allCards);
-
-
 
     // Информация о профиле
     yourId = getUserData._id;
     renderInfoOnMe(getUserData);
+
 
     // Вывод карточек на страницу
     renderCards(allCards, yourId);
@@ -75,8 +77,6 @@ const initLikefromCard = (buttonLike, textNumlike, dataCard) => {
     if (buttonLike.classList.contains("card__like-button_is-active")) {
       addLikeFromServer(dataCard._id)
       .then((data) => {
-        console.log('data: ', "true", data);
-        console.log('dataCard: ', data.likes.length);
         textNumlike.textContent = data.likes.length;
       })
       .catch(err => {
@@ -85,8 +85,6 @@ const initLikefromCard = (buttonLike, textNumlike, dataCard) => {
     } else {
       deleteLikeFromServer(dataCard._id)
       .then((data) => {
-        console.log('data: ', "false", data);
-        console.log('dataCard: ', data.likes.length);
         textNumlike.textContent = data.likes.length;
         if(data.likes.length === 0) {
           textNumlike.textContent = null
@@ -97,7 +95,6 @@ const initLikefromCard = (buttonLike, textNumlike, dataCard) => {
       })
     }
 }
-
 
 // Валидация
 enableValidation({
@@ -112,21 +109,45 @@ enableValidation({
 // enableValidation();
 
 // открыть, закрыть модальные окна
-
 // модальное окно (Профиль)
 function openProfileModal() {
   openPopup(popupTypeEdit);
 
   getInfoOnMe().then((data) => {
-    console.log(data);
     formEditName.value = data.name;
     formEditProffesion.value = data.about;
   })
     .catch((err) => {
       console.log("Ошибка. Запрос не выполнен", err);
     });
-
 };
+
+// модальное окно обновить аватар
+avatar.addEventListener("click", function () {
+  openPopup(document.querySelector(".popup_type_new-avatar"));
+  clearAvatar(formAvatar);
+});
+
+formAvatar.addEventListener("submit", function(evt) {
+  evt.preventDefault();
+
+  const avatarObj = {
+    avatar: formAvatarName.value,
+  }
+
+  submitButton.textContent = 'Сохранение...';
+
+  updatingUserAvatar(avatarObj).then(() => {
+    getInfoOnMe().then(res => {
+      renderInfoOnMe(res)
+    })
+  }).finally(() => {
+      
+    submitButton.textContent = 'Сохранить';
+  });
+
+  closeModal(document.querySelector(".popup_type_new-avatar"));
+})
 
 // модальное окно (Новое место)
 edit.addEventListener("click", function () {
@@ -154,6 +175,7 @@ popups.forEach((popup) => {
   });
 });
 
+
 // добавление данных в форму (редактирование профиля)
 function addTextinForm(editNameValue, editProffesionValue) {
   personaName.textContent = editNameValue;
@@ -168,10 +190,17 @@ function handleProfileFormSubmit(evt) {
     about: formEditProffesion.value
   };
 
-  updateYourProfile(dataProfile);
+  submitButton.textContent = 'Сохранение...';
+  updateYourProfile(dataProfile)
+    .then(() => {
 
-  addTextinForm(formEditName.value, formEditProffesion.value);
-  closeModal(popupTypeEdit);
+      addTextinForm(formEditName.value, formEditProffesion.value);
+    })
+    .finally(() => {
+      
+      submitButton.textContent = 'Сохранить';
+    });
+    closeModal(popupTypeEdit);
 }
 
 formEdit.addEventListener('submit', handleProfileFormSubmit);
@@ -179,10 +208,8 @@ formEdit.addEventListener('submit', handleProfileFormSubmit);
 function renderInfoOnMe(obj) {
   personaName.textContent = obj.name;
   personaDescription.textContent = obj.about;
-  avatar.style.backgroundImage = obj.avatar;
+  avatar.style.backgroundImage = `url(${obj.avatar})`;
 }
-
-
 
 // форма добавления новой карточки
 formMesto.addEventListener('submit', function (evt) {
@@ -193,13 +220,18 @@ formMesto.addEventListener('submit', function (evt) {
     link: formMestoLink.value,
   }
 
+  submitButton.textContent = 'Сохранение...';
+
   loadNewCard(newCardData).then((response) => response.json())
     .then((card) =>
       placesList.prepend(
         initCard(
           card, deleteCard, popupImg, yourId, card.owner._id, initLikefromCard,
         )),
-    )
+    ).finally(() => {
+      
+      submitButton.textContent = 'Сохранить';
+    });
   closeModal(document.querySelector(".popup_type_new-card"));
 });
 

@@ -1,5 +1,5 @@
-export { enableValidation, clearEdit, clearAddMesto };
-import { formMestoName, formMestoLink, formEditName, formEditProffesion } from "../index.js";
+export { enableValidation, clearEdit, clearAddMesto, clearAvatar };
+import { formMestoName, formMestoLink, formEditName, formEditProffesion, formAvatarName } from "../index.js";
 
 const showInputError = (formElement, inputElement, errorMessage) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -88,7 +88,6 @@ const enableValidation = () => {
     // передав ей элемент формы
     setEventListeners(formElement);
   });
-
 };
 
 // фунции отчиски полей форм
@@ -102,5 +101,11 @@ function clearAddMesto(form) {
   form.reset();
   hideInputError(form, formMestoName);
   hideInputError(form, formMestoLink);
+  enableValidation();
+};
+
+function clearAvatar(form) {
+  form.reset();
+  hideInputError(form, formAvatarName);
   enableValidation();
 };

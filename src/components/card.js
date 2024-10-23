@@ -1,6 +1,5 @@
 export { initCard }
 import { openPopup, closeModal } from "./modal.js";
-import { addLikeFromServer, deleteLikeFromServer } from "./api.js";
 
 // Функция создания карточки
 function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDeleteBtn, deleteBtn) {
@@ -17,7 +16,6 @@ function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDelet
   cloneCard.querySelector(".card__title").textContent = dataCard.name;
 
   // Удаление карточки
-
   let delBtn = cloneCard.querySelector(".card__delete-button");
   if (id !== yourId) {
     delBtn.remove()
@@ -55,11 +53,9 @@ function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDelet
 
   // colorLikebtn(like);
 
-
     const arrayLikes =  dataCard.likes;
     arrayLikes.forEach(index => {
       if (index._id == id) {
-        console.log(id);
         like.classList.add("card__like-button_is-active");
       }
     })
@@ -72,7 +68,6 @@ function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDelet
   });
 
   return cloneCard;
-
 };
 
 // Функция добавления лайкa
@@ -84,7 +79,6 @@ export function checkLikeBtn(buttonLike) {
 export function activeLikeBtn(arrayLikes, myIdinCard, btnLike) {
   arrayLikes.forEach(index => {
     if (arrayLikes == myIdinCard) {
-      console.log("index._id", index._id);
       btnLike.classList.add("card__like-button_is-active");
     }
   })
@@ -92,7 +86,6 @@ export function activeLikeBtn(arrayLikes, myIdinCard, btnLike) {
 
 export function colorBtnLike(arrayCards, colorBtnLike) {
   const arrayLikes = arrayCards[index].likes;
-  console.log('arrayLikes: ', arrayLikes);
   arrayLikes.forEach(index => {
     if (index._id == myIdFromServer) {
       colorBtnLike.classList.add("card__like-button_is-active");
