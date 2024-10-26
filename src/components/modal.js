@@ -1,9 +1,9 @@
-export function openPopup(popupElement) {
-  popupElement.classList.add('popup_is-opened');
+export const openPopup = (popupElement) => {
+  document.querySelector(popupElement).classList.add('popup_is-opened');
   document.addEventListener('keydown', closePopupByEsc);
-};
+}
 
-export function closeModal(popupElement) {
+export const closeModal = (popupElement) => {
   popupElement.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', closePopupByEsc);
 };

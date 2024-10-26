@@ -6,6 +6,10 @@ const config = {
   }
 }
 
+const checkResponse = (res) => {
+  res.ok ? res.json() : Promise.reject('Ошибка...')
+}
+
 // Загрузка информации о пользователе с сервера
 export const getInfoOnMe = () => {
   return fetch(`${config.baseUrl}/users/me`, {
@@ -40,6 +44,11 @@ export const loadNewCard = (newCardData) => {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify(newCardData)
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Новая карточка не загрузилась: ${res.status}`);
   })
 }
 
@@ -48,7 +57,7 @@ export const deleteCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  });
+  }).then(res => checkResponse(res));
 }
 
 // Обновление данных профиля
@@ -57,7 +66,7 @@ export const updateYourProfile = (obj) => {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify(obj)
-  });  
+  }).then(res => checkResponse(res));
 } 
 
 // данные по базовому URL от сервера
@@ -101,15 +110,14 @@ export const deleteLikeFromServer = (cardId) => {
 }
 
 export const updatingUserAvatar = (avatar) => {
-  try {
-    const response = fetch(`${config.baseUrl}/users/me/avatar`, {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: config.headers,
       body: JSON.stringify(avatar)
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Данные пользователя не загрузились: ${res.status}`);
     })
-
-    return response
-  } catch (error) {
-    console.log(error);
-  }
 }

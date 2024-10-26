@@ -71,9 +71,9 @@
       <h2>
         Вы уверены?
       </h2>
-      <button class="popup__ok">
-        Да
-      </button>
+        <button type="submit" class="popup__ok">
+          Да
+        </button>
     </div>
   </div>
 
@@ -82,7 +82,7 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Обновить аватар</h3>
       <form class="popup__form" name="new-avatar" novalidate>
-        <input id="input-avatar-url" type="url" name="formAvatar" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку"  >
+        <input id="input-avatar-url" type="url" name="avatar-new" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
         <span class="input-avatar-url-error profile-modal"></span>
         <button type="submit" class="button popup__button" disabled>Сохранить</button>
       </form>

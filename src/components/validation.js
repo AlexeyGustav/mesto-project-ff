@@ -1,12 +1,22 @@
-export { enableValidation, clearEdit, clearAddMesto, clearAvatar };
+export { enableValidation, clearEdit, clearAddMesto, clearAvatar, hideInputError };
 import { formMestoName, formMestoLink, formEditName, formEditProffesion, formAvatarName } from "../index.js";
+
+export const validationConfig = {
+  inputErrorClass: "popup__input_error",
+  inputErrorActiveClass: "popup__input-error_active",
+  popupSelector: ".popup__input",
+  buttonElement: ".popup__button",
+  arrayForms: "form"
+}
 
 const showInputError = (formElement, inputElement, errorMessage) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   // Находим элемент ошибки внутри самой формы
   
-  inputElement.classList.add("popup__input_error");
-  errorElement.classList.add("popup__input-error_active");
+  // inputElement.classList.add("popup__input_error");
+  inputElement.classList.add(validationConfig.inputErrorClass);
+  // errorElement.classList.add("popup__input-error_active");
+  errorElement.classList.add(validationConfig.inputErrorActiveClass);
   errorElement.textContent = errorMessage;
 }  
 
@@ -62,8 +72,10 @@ const toggleButtonState = (inputList, buttonElement) => {
 };
 
 const setEventListeners = (formElement) => {
-  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-  const buttonElement = formElement.querySelector(".popup__button");
+  // const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+  const inputList = Array.from(formElement.querySelectorAll(validationConfig.popupSelector));
+  // const buttonElement = formElement.querySelector(".popup__button");
+  const buttonElement = formElement.querySelector(validationConfig.buttonElement);
   
   // Вызовем toggleButtonState, чтобы не ждать ввода данных в поля
   toggleButtonState(inputList, buttonElement);
@@ -80,7 +92,8 @@ const setEventListeners = (formElement) => {
 const enableValidation = () => {
   // Найдём все формы с указанным классом в DOM,
   // сделаем из них массив методом Array.from
-  const formList = Array.from(document.querySelectorAll("form"));
+  // const formList = Array.from(document.querySelectorAll("form"));
+  const formList = Array.from(document.querySelectorAll(validationConfig.arrayForms));
 
   // Переберём полученную коллекцию
   formList.forEach((formElement) => {
@@ -94,18 +107,13 @@ const enableValidation = () => {
 function clearEdit(form) {
   hideInputError(form, formEditName);
   hideInputError(form, formEditProffesion);
-  enableValidation();
 };
 
 function clearAddMesto(form) {
-  form.reset();
   hideInputError(form, formMestoName);
   hideInputError(form, formMestoLink);
-  enableValidation();
 };
 
 function clearAvatar(form) {
-  form.reset();
   hideInputError(form, formAvatarName);
-  enableValidation();
 };

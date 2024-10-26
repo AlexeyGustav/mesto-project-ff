@@ -1,8 +1,7 @@
 export { initCard }
-import { openPopup, closeModal } from "./modal.js";
 
 // Функция создания карточки
-function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDeleteBtn, deleteBtn) {
+function initCard(dataCard, openImg, delCard, id, yourId, addLike, callBackDeleteBtn, deleteBtn) {
   // Темплейт карточки
   const templateCard = document.getElementById("card-template").content;
   const placesItem = templateCard.querySelector(".places__item");
@@ -14,28 +13,15 @@ function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDelet
   cardImage.src = dataCard.link;
   cardImage.alt = dataCard.name;
   cloneCard.querySelector(".card__title").textContent = dataCard.name;
+  const delBtn = cloneCard.querySelector(".card__delete-button");
 
   // Удаление карточки
-  let delBtn = cloneCard.querySelector(".card__delete-button");
   if (id !== yourId) {
     delBtn.remove()
   }
 
-  // const delBtn = cloneCard.querySelector(".card__delete-button");
-  // delBtn.addEventListener("click", () => {
-  //   delCard(cloneCard);
-  // });
-
   delBtn.addEventListener("click", () => {
-    openPopup(document.querySelector(".popup_type_delete"));
-    const deleteOkCard = document.querySelector(".popup__ok");
-    deleteOkCard.addEventListener("click", function () {
-
-      delCard(dataCard._id);
-      cloneCard.remove();
-
-      closeModal(document.querySelector(".popup_type_delete"));
-    })
+    delCard(dataCard._id, cloneCard);
   });
 
   // Лайк
@@ -72,18 +58,6 @@ function initCard(dataCard, delCard, openImg, id, yourId, addLike, callBackDelet
 
 // Функция добавления лайкa
 
-export function checkLikeBtn(buttonLike) {
-  buttonLike.classList.toggle("card__like-button_is-active");
-}
-
-export function activeLikeBtn(arrayLikes, myIdinCard, btnLike) {
-  arrayLikes.forEach(index => {
-    if (arrayLikes == myIdinCard) {
-      btnLike.classList.add("card__like-button_is-active");
-    }
-  })
-}
-
 export function colorBtnLike(arrayCards, colorBtnLike) {
   const arrayLikes = arrayCards[index].likes;
   arrayLikes.forEach(index => {
@@ -92,3 +66,4 @@ export function colorBtnLike(arrayCards, colorBtnLike) {
     }
   })
 }
+
