@@ -1,7 +1,7 @@
 export { initCard }
 
 // Функция создания карточки
-function initCard(dataCard, openImg, delCard, id, yourId, addLike, callBackDeleteBtn, deleteBtn) {
+function initCard(dataCard, openImg, delCard, id, yourId, addLike) {
   // Темплейт карточки
   const templateCard = document.getElementById("card-template").content;
   const placesItem = templateCard.querySelector(".places__item");
@@ -18,7 +18,7 @@ function initCard(dataCard, openImg, delCard, id, yourId, addLike, callBackDelet
   // Удаление карточки
   if (id !== yourId) {
     delBtn.remove()
-  }
+  };
 
   delBtn.addEventListener("click", () => {
     delCard(dataCard._id, cloneCard);
@@ -29,41 +29,26 @@ function initCard(dataCard, openImg, delCard, id, yourId, addLike, callBackDelet
   const numlike = cloneCard.querySelector(".card__like-text");
 
   numlike.textContent = dataCard.likes.length;
-  if(dataCard.likes.length === 0) {
+  if (dataCard.likes.length === 0) {
     numlike.textContent = null
   };
 
   like.addEventListener("click", (evt) => {
-    addLike(evt.target, cloneCard.querySelector(".card__like-text"), dataCard); 
+    addLike(evt.target, numlike, dataCard);
   });
 
-  // colorLikebtn(like);
-
-    const arrayLikes =  dataCard.likes;
-    arrayLikes.forEach(index => {
-      if (index._id == id) {
-        like.classList.add("card__like-button_is-active");
-      }
-    })
-  
+  const arrayLikes = dataCard.likes;
+  arrayLikes.some(index => {
+    if (index._id == id) {
+      like.classList.add("card__like-button_is-active");
+    }
+  })
 
   // Открытие попапа с картинкой
-  const imageCard = cloneCard.querySelector(".card__image");
-  imageCard.addEventListener("click", function (e) {
+  cardImage.addEventListener("click", function (e) {
     openImg(e.target);
   });
 
   return cloneCard;
 };
-
-// Функция добавления лайкa
-
-export function colorBtnLike(arrayCards, colorBtnLike) {
-  const arrayLikes = arrayCards[index].likes;
-  arrayLikes.forEach(index => {
-    if (index._id == myIdFromServer) {
-      colorBtnLike.classList.add("card__like-button_is-active");
-    }
-  })
-}
 

@@ -1,12 +1,11 @@
-export { enableValidation, clearEdit, clearAddMesto, clearAvatar, hideInputError };
-import { formMestoName, formMestoLink, formEditName, formEditProffesion, formAvatarName } from "../index.js";
+export { enableValidation, clearForm };
 
 export const validationConfig = {
   inputErrorClass: "popup__input_error",
   inputErrorActiveClass: "popup__input-error_active",
   popupSelector: ".popup__input",
   buttonElement: ".popup__button",
-  arrayForms: "form"
+  form: "form"
 }
 
 const showInputError = (formElement, inputElement, errorMessage) => {
@@ -23,9 +22,9 @@ const showInputError = (formElement, inputElement, errorMessage) => {
 const hideInputError = (formElement, inputElement) => {
   // Находим элемент ошибки
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
-
-  inputElement.classList.remove("popup__input_error");
-  errorElement.classList.remove("popup__input-error_active");
+  
+  inputElement.classList.remove(validationConfig.inputErrorClass);
+  errorElement.classList.remove(validationConfig.inputErrorActiveClass);
   errorElement.textContent = "";
 }
 
@@ -93,7 +92,7 @@ const enableValidation = () => {
   // Найдём все формы с указанным классом в DOM,
   // сделаем из них массив методом Array.from
   // const formList = Array.from(document.querySelectorAll("form"));
-  const formList = Array.from(document.querySelectorAll(validationConfig.arrayForms));
+  const formList = Array.from(document.querySelectorAll(validationConfig.form));
 
   // Переберём полученную коллекцию
   formList.forEach((formElement) => {
@@ -104,16 +103,16 @@ const enableValidation = () => {
 };
 
 // фунции отчиски полей форм
-function clearEdit(form) {
-  hideInputError(form, formEditName);
-  hideInputError(form, formEditProffesion);
-};
+function clearForm(form) {
+  const spanErrorElement = form.querySelectorAll("span");
+  const inputErrorElements = form.querySelectorAll("input");
+  
+  inputErrorElements.forEach((input) => {
+    input.classList.remove("popup__input_error");
+  });
 
-function clearAddMesto(form) {
-  hideInputError(form, formMestoName);
-  hideInputError(form, formMestoLink);
-};
-
-function clearAvatar(form) {
-  hideInputError(form, formAvatarName);
-};
+  spanErrorElement.forEach((span) => {
+    span.classList.remove("popup__input-error_active");
+    span.textContent = "";
+  });
+}

@@ -1,5 +1,5 @@
 export const openPopup = (popupElement) => {
-  document.querySelector(popupElement).classList.add('popup_is-opened');
+  popupElement.classList.add('popup_is-opened');
   document.addEventListener('keydown', closePopupByEsc);
 }
 
