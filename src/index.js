@@ -221,7 +221,6 @@ function renderInfoOnMe(obj) {
   avatar.style.backgroundImage = `url(${obj.avatar})`;
 }
 
-
 // форма добавления новой карточки
 formMesto.addEventListener('submit', function (evt) {
   evt.preventDefault();
@@ -249,7 +248,6 @@ formMesto.addEventListener('submit', function (evt) {
       
       submitButton.textContent = 'Сохранить';
     });
-
 });
 
 
