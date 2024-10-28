@@ -22,6 +22,7 @@ const popupNewAvatar = document.querySelector(".popup_type_new-avatar");
 const popupNewCard = document.querySelector(".popup_type_new-card");
 const openModalImage = document.querySelector(".popup_type_image");
 const imageModal = document.querySelector(".popup__image");
+const imagePopupCaption = document.querySelector(".popup__caption");
 
 
 // добавление карточки
@@ -88,8 +89,6 @@ document.querySelector(".popup__ok").addEventListener("click", function () {
   .catch(err => {
     console.log(`Карточка не удалена ${err}`);
   })
-  .finally(() => {
-  });
 })
 
 // функция создания лайка
@@ -257,7 +256,7 @@ export function popupImg(e) {
 
   imageModal.src = e.src;
   imageModal.alt = e.alt;
-  document.querySelector(".popup__caption").textContent = imageModal.alt
+  imagePopupCaption.textContent = imageModal.alt
 }
 
 

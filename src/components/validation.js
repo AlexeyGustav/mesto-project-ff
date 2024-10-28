@@ -5,8 +5,11 @@ export const validationConfig = {
   inputErrorActiveClass: "popup__input-error_active",
   popupSelector: ".popup__input",
   buttonElement: ".popup__button",
-  form: "form"
+  form: "form",
+  errorText: "span",
+  errorInput: "input"
 }
+
 
 const showInputError = (formElement, inputElement, errorMessage) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -104,15 +107,15 @@ const enableValidation = () => {
 
 // фунции отчиски полей форм
 function clearForm(form) {
-  const spanErrorElement = form.querySelectorAll("span");
-  const inputErrorElements = form.querySelectorAll("input");
+  const spanErrorElement = form.querySelectorAll(validationConfig.errorText);
+  const inputErrorElements = form.querySelectorAll(validationConfig.errorInput);
   
   inputErrorElements.forEach((input) => {
-    input.classList.remove("popup__input_error");
+    input.classList.remove(validationConfig.inputErrorClass);
   });
 
   spanErrorElement.forEach((span) => {
-    span.classList.remove("popup__input-error_active");
+    span.classList.remove(validationConfig.inputErrorActiveClass);
     span.textContent = "";
   });
 }
